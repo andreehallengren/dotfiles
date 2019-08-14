@@ -1,4 +1,5 @@
 {
     "workbench.colorTheme": "Ayu Mirage Bordered",
-    "lldb.adapterType": "bundled"
+    "lldb.adapterType": "bundled",
+    "window.zoomLevel": 0
 }

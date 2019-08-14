@@ -1,3 +1,5 @@
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 function cargoinstall() {
     cargo install $1
 }
@@ -20,8 +22,8 @@ function aptinstall() {
 
 function link() {
     if [ -f "$HOME/$1" ]; then
-        ln -sf $PWD/$1 $HOME/$1
-        echo "$1 symlinked!"
+        ln -sf $SCRIPT_DIR/$1 $HOME/$1
+        echo "symlinked: $SCRIPT_DIR/$1 -> $HOME/$1"
     else
         echo "$HOME/$1 doesn't exists!"
     fi
@@ -51,12 +53,17 @@ aptinstall alacritty ppa:mmstick76/alacritty
 curl https://sh.rustup.rs -sSf | sh -s -- -y
 cargoinstall ripgrep
 cargoinstall exa
+cargoinstall bat
 
 snapinstall code
 
 # Setup symbolic links
 echo " === Symlinking configurations === "
 link .bashrc
+cp .tmux.conf $HOME/.tmux.conf
+cp .tmux.conf.local $HOME/.tmux.conf.local
+link .tmux.conf
+link .tmux.conf.local
 linkdir .config
 
 source $HOME/.bashrc
