@@ -120,3 +120,7 @@ PATH="$PATH:$HOME/go/bin/"
 PATH="$PATH:$HOME/.cargo/bin"
 
 alias ls='exa -lh'
+
+if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
+    tmux attach -t default || tmux new -s default
+fi
