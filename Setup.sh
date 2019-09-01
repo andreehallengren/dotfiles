@@ -1,3 +1,4 @@
+#!/bin/bash
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 function cargoinstall() {
@@ -48,6 +49,7 @@ sudo apt update
 aptinstall cmake
 aptinstall curl
 aptinstall golang-go
+aptinstall zsh
 aptinstall alacritty ppa:mmstick76/alacritty
 # Install rust
 curl https://sh.rustup.rs -sSf | sh -s -- -y
@@ -60,12 +62,16 @@ snapinstall code
 # Setup symbolic links
 echo " === Symlinking configurations === "
 link .bashrc
+link .zshrc
 cp .tmux.conf $HOME/.tmux.conf
 cp .tmux.conf.local $HOME/.tmux.conf.local
 link .tmux.conf
 link .tmux.conf.local
 linkdir .config
 
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
+
 source $HOME/.bashrc
+source $HOME/.zshrc
 
 echo "Done!"
