@@ -70,7 +70,6 @@ link .tmux.conf.local
 linkdir .config
 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
-chsh -s /usr/bin/zsh root
 
 source $HOME/.bashrc
 source $HOME/.zshrc
