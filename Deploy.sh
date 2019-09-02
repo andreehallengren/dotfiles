@@ -33,12 +33,12 @@ function aptinstall() {
 }
 
 function link() {
-    if [ -f "$HOME/$1" ]; then
-        ln -sf $SCRIPT_DIR/$1 $HOME/$1
-        echo "-- symlinked: $SCRIPT_DIR/$1 -> $HOME/$1"
-    else
-        echo "-- $HOME/$1 doesn't exists!"
+    if ! [ -f "$HOME/$1" ]; then
+        createmissingfile $HOME/$1
     fi
+    
+    ln -sf $SCRIPT_DIR/$1 $HOME/$1
+    echo "-- symlinked: $SCRIPT_DIR/$1 -> $HOME/$1"
 }
 
 function linkdir() {
@@ -67,6 +67,7 @@ aptinstall curl
 aptinstall golang-go
 aptinstall zsh
 aptinstall alacritty ppa:mmstick76/alacritty
+aptinstall libssl-dev
 
 # Install rust
 if ! [ "type rustup" ] 2>/dev/null; then
@@ -78,6 +79,7 @@ fi
 cargoinstall rg ripgrep
 cargoinstall exa exa
 cargoinstall bat bat
+cargoinstall starship starship
 
 snapinstall code
 
@@ -87,15 +89,17 @@ else
     echo "-- Oh My Zsh already installed, skipping.."
 fi
 
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
 # Setup symbolic links
 echo "=== Symlinking configurations === "
 link .bashrc
 link .zshrc
-createmissingfile $HOME/.tmux.conf
-createmissingfile $HOME/.tmux.conf.local 
 link .tmux.conf
 link .tmux.conf.local
-linkdir .config
+link .config/starship.toml
+linkdir .config/alacritty
+linkdir .config/Code
 
 source $HOME/.bashrc
 source $HOME/.zshrc
