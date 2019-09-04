@@ -65,7 +65,7 @@ echo "=== Installing dependencies === "
 aptinstall cmake
 aptinstall curl
 aptinstall golang-go
-aptinstall zsh
+aptinstall fish ppa:fish-shell/release-3
 aptinstall alacritty ppa:mmstick76/alacritty
 aptinstall libssl-dev
 
@@ -83,25 +83,13 @@ cargoinstall starship starship
 
 snapinstall code
 
-if ! [ -d "$ZSH" ]; then
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
-else
-    echo "-- Oh My Zsh already installed, skipping.."
-fi
-
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-
 # Setup symbolic links
 echo "=== Symlinking configurations === "
-link .bashrc
-link .zshrc
 link .tmux.conf
 link .tmux.conf.local
 link .config/starship.toml
+link .config/fish/config.fish
 linkdir .config/alacritty
 linkdir .config/Code
 
-source $HOME/.bashrc
-source $HOME/.zshrc
-
-echo "Done!"
+echo "Done, please restart your terminal!"
