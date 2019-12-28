@@ -1,8 +1,8 @@
 if status --is-interactive
 and not set -q TMUX
-    tmux new -s default
+    tmux new -A -s default
 end
-clear
+# clear
 
 set -x PATH $PATH $HOME/go/bin/
 set -x PATH $PATH $HOME/.cargo/bin
