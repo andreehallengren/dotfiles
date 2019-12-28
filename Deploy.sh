@@ -2,33 +2,22 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 function cargoinstall() {
-    if [ "type $1" ] 2>/dev/null; then
-        echo "-- $2 already installed, skipping.."
-        return
-    fi
-    cargo install $2
+    echo "-- Installing $1"
+    cargo install $1
 }
 
 function snapinstall() {
-    if [ "type $1" ] 2>/dev/null; then
-        echo "-- $1 already installed, skipping.."
-        return
-    fi
-
-    snap install $1 --classic
+    echo "-- Installing $1"
+    sudo snap install $1 --classic
 }
 
 function aptinstall() {
-    if [ "hash $1" ] 2>/dev/null; then
-        echo "-- $1 already installed, skipping.."
-        return
-    fi
-
     # Second parameter is optional for custom repos
     if [ $# -gt 1 ]; then
-        sudo add-apt-repository $2
+        sudo add-apt-repository $2 -y
     fi
 
+    echo "-- Installing $1"
     sudo apt install $1 -y
 }
 
@@ -44,8 +33,7 @@ function link() {
 function linkdir() {
     for file in $1/*
     do
-        if [ -d "$file" ]
-        then
+        if [ -d "$file" ]; then
             linkdir $file
         else
             link $file
@@ -59,29 +47,51 @@ function createmissingfile() {
     fi
 }
 
+function exists_command() {
+    command -v $1 &>/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        echo "-- $1 already installed, skipping.."
+        true
+    else
+        false
+    fi
+}
+
+function exists_dpkg() {
+    dpkg -s $1 2>/dev/null | grep -q ^"Status: install ok installed"$
+    if [ $? -eq 0 ]; then
+        echo "-- $1 already installed, skipping.."
+        true
+    else
+        false
+    fi
+}
+
+
 # Install dependencies
 echo "=== Installing dependencies === "
 [ -z "$(find -H /var/lib/apt/lists -maxdepth 0 -mtime -7)" ] && sudo apt update
-aptinstall cmake
-aptinstall curl
-aptinstall golang-go
-aptinstall fish ppa:fish-shell/release-3
-aptinstall alacritty ppa:mmstick76/alacritty
-aptinstall libssl-dev
+exists_dpkg cmake       || aptinstall cmake
+exists_dpkg curl        || aptinstall curl
+exists_dpkg golang-go   || aptinstall golang-go
+exists_dpkg fish        || aptinstall fish ppa:fish-shell/release-3
+exists_dpkg alacritty   || aptinstall alacritty ppa:mmstick76/alacritty
+exists_dpkg tmux        || aptinstall tmux
+exists_dpkg libssl-dev  || aptinstall libssl-dev
 
 # Install rust
-if ! [ "type rustup" ] 2>/dev/null; then
+if ! exists_command rustup; then
     curl https://sh.rustup.rs -sSf | sh -s -- -y
-else
-    echo "-- Rust already installed, skipping.."
+    source $HOME/.cargo/env
 fi
 
-cargoinstall rg ripgrep
-cargoinstall exa exa
-cargoinstall bat bat
-cargoinstall starship starship
+# cargoinstall rg ripgrep
+exists_command exa      || cargoinstall exa exa
+exists_command bat      || cargoinstall bat bat
+exists_command starship || cargoinstall starship starship
 
-snapinstall code
+exists_command rg   || snapinstall ripgrep
+exists_command code || snapinstall code
 
 # Setup symbolic links
 echo "=== Symlinking configurations === "
