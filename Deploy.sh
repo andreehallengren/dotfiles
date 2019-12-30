@@ -119,7 +119,7 @@ exists_command code || snapinstall code
 
 # Setup symbolic links
 echo "=== Symlinking configurations === "
-link .tmux.conftrue
+link .tmux.conf
 link .tmux.conf.local
 link .config/starship.toml
 link .config/fish/config.fish
