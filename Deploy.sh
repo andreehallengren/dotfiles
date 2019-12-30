@@ -1,4 +1,16 @@
 #!/bin/bash
+FONTS=0
+
+while getopts ":f" opt; do
+  case $opt in
+    f)
+      FONTS=1
+      ;;
+  esac
+done
+
+echo $FONTS;
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 function cargoinstall() {
@@ -8,17 +20,17 @@ function cargoinstall() {
 
 function snapinstall() {
     echo "-- Installing $1"
-    sudo snap install $1 --classic
+    snap install $1 --classic
 }
 
 function aptinstall() {
     # Second parameter is optional for custom repos
     if [ $# -gt 1 ]; then
-        sudo add-apt-repository $2 -y
+        add-apt-repository $2 -y
     fi
 
     echo "-- Installing $1"
-    sudo apt install $1 -y
+    apt install $1 -y
 }
 
 function link() {
@@ -67,10 +79,9 @@ function exists_dpkg() {
     fi
 }
 
-
 # Install dependencies
 echo "=== Installing dependencies === "
-[ -z "$(find -H /var/lib/apt/lists -maxdepth 0 -mtime -7)" ] && sudo apt update
+[ -z "$(find -H /var/lib/apt/lists -maxdepth 0 -mtime -7)" ] && apt update
 exists_dpkg git         || aptinstall git
 exists_dpkg cmake       || aptinstall cmake
 exists_dpkg curl        || aptinstall curl
@@ -79,6 +90,19 @@ exists_dpkg fish        || aptinstall fish ppa:fish-shell/release-3
 exists_dpkg alacritty   || aptinstall alacritty ppa:mmstick76/alacritty
 exists_dpkg tmux        || aptinstall tmux
 exists_dpkg libssl-dev  || aptinstall libssl-dev
+
+# Install fonts
+if [ $FONTS -eq 1 ]; then
+    echo "-- Installing fonts"
+    
+    pushd .. > /dev/null
+    git clone https://github.com/powerline/fonts.git --depth=1
+    pushd fonts > /dev/null
+    ./install.sh
+    popd > /dev/null
+    rm -rf fonts
+    popd > /dev/null
+fi
 
 # Install rust
 if ! exists_command rustup; then
@@ -96,7 +120,7 @@ exists_command code || snapinstall code
 
 # Setup symbolic links
 echo "=== Symlinking configurations === "
-link .tmux.conf
+link .tmux.conftrue
 link .tmux.conf.local
 link .config/starship.toml
 link .config/fish/config.fish
