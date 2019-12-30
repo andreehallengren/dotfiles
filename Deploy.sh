@@ -71,6 +71,7 @@ function exists_dpkg() {
 # Install dependencies
 echo "=== Installing dependencies === "
 [ -z "$(find -H /var/lib/apt/lists -maxdepth 0 -mtime -7)" ] && sudo apt update
+exists_dpkg git         || aptinstall git
 exists_dpkg cmake       || aptinstall cmake
 exists_dpkg curl        || aptinstall curl
 exists_dpkg golang-go   || aptinstall golang-go
