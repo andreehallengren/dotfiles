@@ -94,7 +94,7 @@ exists_dpkg libssl-dev  || aptinstall libssl-dev
 # Install fonts
 if [ $FONTS -eq 1 ]; then
     echo "-- Installing fonts"
-    
+
     pushd .. > /dev/null
     git clone https://github.com/powerline/fonts.git --depth=1
     pushd fonts > /dev/null
@@ -110,10 +110,9 @@ if ! exists_command rustup; then
     source $HOME/.cargo/env
 fi
 
-# cargoinstall rg ripgrep
-exists_command exa      || cargoinstall exa exa
-exists_command bat      || cargoinstall bat bat
-exists_command starship || cargoinstall starship starship
+exists_command exa      || cargoinstall exa
+exists_command bat      || cargoinstall bat
+exists_command starship || cargoinstall starship
 
 exists_command rg   || snapinstall ripgrep
 exists_command code || snapinstall code
