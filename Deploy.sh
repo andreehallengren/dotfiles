@@ -32,7 +32,7 @@ function aptinstall() {
 }
 
 function link() {
-    if ! [ -f "$HOME/$1" ]; then
+    if [ ! -f "$HOME/$1" ]; then
         createmissingfile $HOME/$1
     fi
     
@@ -52,8 +52,17 @@ function linkdir() {
 }
 
 function createmissingfile() {
-    if ! [ "ls $1" &>/dev/null ]; then
-        touch $1
+    mkdir -p $(dirname $1)
+    touch $1
+}
+
+function exists_type() {
+    type $1 >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        echo "-- $1 already installed, skipping.."
+        true
+    else
+        false
     fi
 }
 
@@ -103,14 +112,17 @@ if [ $FONTS -eq 1 ]; then
 fi
 
 # Install rust
-if ! exists_command rustup; then
-    curl https://sh.rustup.rs -sSf | sh -s -- -y
+if ! exists_type rustup; then
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
     source $HOME/.cargo/env
 fi
 
-exists_command exa      || cargoinstall exa
-exists_command bat      || cargoinstall bat
-exists_command starship || cargoinstall starship
+if ! exists_type starship; then
+    curl -fsSL https://starship.rs/install.sh | bash
+fi
+
+exists_type exa      || cargoinstall exa
+exists_type bat      || cargoinstall bat
 
 exists_command rg   || snapinstall ripgrep
 exists_command code || snapinstall code
