@@ -97,6 +97,7 @@ exists_dpkg fish        || aptinstall fish ppa:fish-shell/release-3
 exists_dpkg alacritty   || aptinstall alacritty ppa:mmstick76/alacritty
 exists_dpkg tmux        || aptinstall tmux
 exists_dpkg libssl-dev  || aptinstall libssl-dev
+exists_dpkg fdfind      || aptinstall fd-find
 
 # Install fonts
 if [ $FONTS -eq 1 ]; then

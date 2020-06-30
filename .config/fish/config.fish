@@ -8,6 +8,7 @@ set -x PATH $PATH $HOME/go/bin/
 set -x PATH $PATH $HOME/.cargo/bin
 
 alias ls='exa -lh'
+alias fd=fdfind
 
 eval (starship init fish)
 
