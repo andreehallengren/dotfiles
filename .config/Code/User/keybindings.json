@@ -11,5 +11,15 @@
     {
         "key": "ctrl+p",
         "command": "-workbench.action.quickOpen"
+    },
+    {
+        "key": "shift+alt+right",
+        "command": "cursorLineEnd",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "shift+alt+left",
+        "command": "cursorLineStart",
+        "when": "editorTextFocus",
     }
 ]

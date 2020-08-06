@@ -1,5 +1,14 @@
 {
     "workbench.colorTheme": "Ayu Mirage Bordered",
     "lldb.adapterType": "bundled",
-    "window.zoomLevel": 0
+    "window.zoomLevel": 0,
+    "rust-analyzer.checkOnSave.command": "clippy",
+    // "rust-analyzer.checkOnSave.allTargets": false,
+    // "rust-analyzer.checkOnSave.extraArgs": [
+    //     "--target",
+    //     "thumbv7m-none-eabihf",
+    // ],
+    // "rust-analyzer.checkOnSave.features": [
+    //     "stm32f303xc"
+    // ],
 }
