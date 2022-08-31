@@ -1,7 +1,9 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
 add_newline = false
 
 [character]
-symbol = "➜"
+success_symbol = "[➜](bold green)"
 
-[line_break]
+[package]
 disabled = true

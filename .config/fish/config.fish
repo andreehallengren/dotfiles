@@ -11,7 +11,7 @@ set -x PATH $PATH $HOME/.cargo/bin
 alias ls='exa -lh'
 alias fd=fdfind
 
-eval (starship init fish)
+starship init fish | source
 
 set -U fish_color_autosuggestion 9C9C9C
 set -U fish_color_cancel -r
